@@ -58,8 +58,11 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const id = entry.target.id;
-                        // Update URL without scrolling
-                        history.replaceState(null, null, `#${id}`);
+                        const index = Array.from(document.querySelectorAll('.item')).indexOf(entry.target);
+                        // Only update URL for posts after the first 5
+                        if (index >= 5) {
+                            history.replaceState(null, null, `#${id}`);
+                        }
                     }
                 });
             }, {
