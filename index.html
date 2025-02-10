@@ -52,6 +52,36 @@
     </div>
 
     <script>
+        // Function to create and setup the Intersection Observer
+        function setupScrollObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        // Update URL without scrolling
+                        history.replaceState(null, null, `#${id}`);
+                    }
+                });
+            }, {
+                threshold: 0.5 // Trigger when item is 50% visible
+            });
+
+            // Observe all item divs
+            document.querySelectorAll('.item').forEach(item => {
+                observer.observe(item);
+            });
+        }
+
+        // Function to scroll to hash on load
+        function scrollToHash() {
+            if (window.location.hash) {
+                const element = document.querySelector(window.location.hash);
+                if (element) {
+                    element.scrollIntoView();
+                }
+            }
+        }
+
         // Function to fetch and render the JSON data
         async function renderDeviations() {
             const container = document.getElementById('deviations-container');
@@ -70,6 +100,7 @@
                 deviations.forEach(item => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'item';
+                    itemDiv.id = item.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
                     // Add title
                     const title = document.createElement('h2');
@@ -104,8 +135,11 @@
             }
         }
 
-        // Call the function to render deviations when the page loads
-        renderDeviations();
+        // Call the functions to render deviations and setup scroll handling
+        renderDeviations().then(() => {
+            setupScrollObserver();
+            scrollToHash();
+        });
     </script>
 </body>
 </html>
