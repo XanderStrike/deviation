@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deviations Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .item {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .item h2 {
+            margin-top: 0;
+        }
+        .item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Deviations Viewer</h1>
+    <div id="deviations-container">
+        <!-- Items will be rendered here -->
+    </div>
+
+    <script>
+        // Function to fetch and render the JSON data
+        async function renderDeviations() {
+            const container = document.getElementById('deviations-container');
+
+            try {
+                // Fetch the deviations.json file
+                const response = await fetch('deviations.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load deviations.json');
+                }
+
+                // Parse the JSON data
+                const deviations = await response.json();
+
+                // Render each item
+                deviations.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item';
+
+                    // Add title
+                    const title = document.createElement('h2');
+                    title.textContent = item.title;
+                    itemDiv.appendChild(title);
+
+                    // Add publish date
+                    const pubDate = document.createElement('p');
+                    pubDate.textContent = `Published on: ${item.pubDate}`;
+                    itemDiv.appendChild(pubDate);
+
+                    // Add description
+                    const description = document.createElement('p');
+                    description.innerHTML = item.description; // Use innerHTML to render HTML content
+                    itemDiv.appendChild(description);
+
+                    // Add image
+                    const image = document.createElement('img');
+                    image.src = item.content;
+                    image.alt = item.title;
+                    itemDiv.appendChild(image);
+
+                    // Append the item to the container
+                    container.appendChild(itemDiv);
+                });
+            } catch (error) {
+                console.error('Error loading or rendering deviations:', error);
+                container.innerHTML = `<p style="color: red;">Error loading deviations: ${error.message}</p>`;
+            }
+        }
+
+        // Call the function to render deviations when the page loads
+        renderDeviations();
+    </script>
+</body>
+</html>
