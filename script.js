@@ -5,8 +5,11 @@ function setupScrollObserver() {
             if (entry.isIntersecting) {
                 const id = entry.target.id;
                 const index = Array.from(document.querySelectorAll('.item')).indexOf(entry.target);
-                // Only update URL for posts after the first 5
-                if (index >= 5) {
+                if (index < 5) {
+                    // Clear hash when near the top
+                    history.replaceState(null, null, window.location.pathname);
+                } else {
+                    // Update hash for posts after first 5
                     history.replaceState(null, null, `#${id}`);
                 }
             }
