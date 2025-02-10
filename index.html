@@ -127,6 +127,9 @@
                 // Parse the JSON data
                 const deviations = await response.json();
 
+                // Sort deviations from oldest to newest
+                deviations.sort((a, b) => new Date(a.pubDate) - new Date(b.pubDate));
+
                 // Render each item
                 deviations.forEach(item => {
                     const itemDiv = document.createElement('div');
